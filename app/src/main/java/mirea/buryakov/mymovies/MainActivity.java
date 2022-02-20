@@ -1,20 +1,31 @@
 package mirea.buryakov.mymovies;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import mirea.buryakov.mymovies.adapters.MovieAdapter;
+import mirea.buryakov.mymovies.data.MainViewModel;
 import mirea.buryakov.mymovies.data.Movie;
 import mirea.buryakov.mymovies.utils.JSONUtils;
 import mirea.buryakov.mymovies.utils.NetworkUtils;
@@ -27,10 +38,36 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewTopRated;
     private TextView textViewPopularity;
 
+    private MainViewModel mainViewModel;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.itemMain:
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.itemFavourite:
+                Intent intentToFavourite = new Intent(this,FavouriteActivity.class);
+                startActivity(intentToFavourite);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainViewModel = new  ViewModelProvider(this).get(MainViewModel.class);
         swithSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewPopularity);
         textViewTopRated = findViewById(R.id.textViewTopRated);
@@ -49,13 +86,23 @@ public class MainActivity extends AppCompatActivity {
         movieAdapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
             @Override
             public void onPosterClick(int position) {
-                Toast.makeText(MainActivity.this, "Clicked: " + position, Toast.LENGTH_SHORT).show();
+                Movie movie = movieAdapter.getMovies().get(position);
+                Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+                intent.putExtra("id",movie.getId());
+                startActivity(intent);
             }
         });
         movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
             @Override
             public void onReachEnd() {
                 Toast.makeText(MainActivity.this, "End list", Toast.LENGTH_SHORT).show();
+            }
+        });
+        LiveData<List<Movie>> movieFromLiveData = mainViewModel.getMovies();
+        movieFromLiveData.observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(List<Movie> movies) {
+                movieAdapter.setMovies(movies);
             }
         });
     }
@@ -81,8 +128,17 @@ public class MainActivity extends AppCompatActivity {
             textViewTopRated.setTextColor(getResources().getColor(R.color.white));
             textViewPopularity.setTextColor(getResources().getColor(R.color.purple_500));
         }
+        downloadData(methodOfSort,1);
+    }
+
+    private void downloadData(int methodOfSort, int page) {
         JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(methodOfSort, 1);
         ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(jsonObject);
-        movieAdapter.setMovies(movies);
+        if (movies != null && !movies.isEmpty()) {
+            mainViewModel.deleteAllMovies();
+            for (Movie movie : movies) {
+                mainViewModel.insertMovie(movie);
+            }
+        }
     }
 }

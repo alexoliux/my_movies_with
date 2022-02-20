@@ -1,4 +1,4 @@
-package mirea.buryakov.mymovies;
+package mirea.buryakov.mymovies.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import mirea.buryakov.mymovies.R;
 import mirea.buryakov.mymovies.data.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private ArrayList<Movie> movies;
+    private List<Movie> movies;
     private OnPosterClickListener onPosterClickListener;
     private OnReachEndListener onReachEndListener;
 
@@ -24,11 +26,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         movies = new ArrayList<>();
     }
 
-    interface OnPosterClickListener {
+    public interface OnPosterClickListener {
         void onPosterClick(int position);
     }
 
-    interface OnReachEndListener {
+    public interface OnReachEndListener {
         void onReachEnd();
     }
 
@@ -49,7 +51,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        if (position > movies.size() - 4 && onReachEndListener != null) {
+        if (position == movies.size() - 4 && onReachEndListener != null) {
             onReachEndListener.onReachEnd();
         }
         Movie movie = movies.get(position);
@@ -79,17 +81,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
     }
 
-    public ArrayList<Movie> getMovies() {
+    public List<Movie> getMovies() {
         return movies;
 
     }
 
-    public void addMovies(ArrayList<Movie> movies) {
+    public void addMovies(List<Movie> movies) {
         this.movies.addAll(movies);
         notifyDataSetChanged();
     }
 
-    public void setMovies(ArrayList<Movie> movies) {
+    public void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }

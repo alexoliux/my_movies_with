@@ -9,9 +9,11 @@
         <entry key="..\:/android/MyMovies/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/android/MyMovies/app/src/main/res/layout/movie_info.xml" value="0.36666666666666664" />
         <entry key="..\:/android/MyMovies/app/src/main/res/layout/movie_item.xml" value="0.36666666666666664" />
-        <entry key="..\:/android/MyMovies/app/src/main/res/layout/review_item.xml" value="0.1" />
-        <entry key="..\:/android/MyMovies/app/src/main/res/layout/trailer_item.xml" value="0.14210526315789473" />
+        <entry key="..\:/android/MyMovies/app/src/main/res/layout/review_item.xml" value="0.33" />
+        <entry key="..\:/android/MyMovies/app/src/main/res/layout/trailer_item.xml" value="0.67" />
         <entry key="..\:/android/MyMovies/app/src/main/res/menu/main_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/android/MyMovies/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.296" />
+        <entry key="..\:/android/MyMovies/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.296" />
       </map>
     </option>
   </component>

@@ -16,4 +16,5 @@
     <string name="description">Описание:</string>
     <string name="description_poster_for_movie">Постер к фильму</string>
     <string name="description_add_to_favorite">Добавить или удалить из избранного</string>
+    <string name="trailer">Трейлеры: </string>
 </resources>

@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollInfoViewInfo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailActivity">
@@ -9,17 +10,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/textViewRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/guidelineCenter"
-            app:layout_constraintTop_toBottomOf="@+id/textViewDescriptionOriginalTitle" />
 
         <ImageView
             android:id="@+id/imageViewBigPoster"
@@ -29,101 +19,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/btn_dialog" />
+            app:srcCompat="@android:drawable/btn_dialog"
+            android:contentDescription="@string/description_poster_for_movie" />
 
-        <TextView
-            android:id="@+id/textViewLabelTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Название:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewAddToFavourite" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineCenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
-
-        <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/guidelineCenter"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewAddToFavourite" />
-
-        <TextView
-            android:id="@+id/textViewOriginalTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Оригинальное название:"
-            app:layout_constraintStart_toStartOf="parent"
-
-            app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
-
-        <TextView
-            android:id="@+id/textViewDescriptionOriginalTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="TextView"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guidelineCenter"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
-
-        <TextView
-            android:id="@+id/textViewLabelRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Рейтинг:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewDescriptionOriginalTitle" />
-
-        <TextView
-            android:id="@+id/textViewLabelReleaseDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Дата релиза:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewRating" />
-
-        <TextView
-            android:id="@+id/textViewReleaseDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guidelineCenter"
-            app:layout_constraintTop_toBottomOf="@+id/textViewRating" />
-
-        <TextView
-            android:id="@+id/textViewLabelDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Описание: "
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewReleaseDate" />
-
-        <TextView
-            android:id="@+id/textViewOverview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="TextView"
-            app:layout_constraintTop_toBottomOf="@+id/textViewLabelDescription"
-            tools:layout_editor_absoluteX="0dp" />
 
         <ImageView
             android:id="@+id/imageViewAddToFavourite"
@@ -131,28 +29,21 @@
             android:layout_height="@dimen/size_of_star"
             android:layout_marginEnd="16dp"
             android:onClick="onClickChangeFavourite"
+            android:contentDescription="@string/description_add_to_favorite"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewBigPoster"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewBigPoster"
             app:srcCompat="@drawable/yellow_star" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewTrailers"
-            android:nestedScrollingEnabled="false"
+        <include
+            android:id="@+id/movieInfo"
+            layout="@layout/movie_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewOverview"/>
+            app:layout_constraintTop_toBottomOf="@+id/imageViewAddToFavourite" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewReviews"
-            android:nestedScrollingEnabled="false"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recyclerViewTrailers"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

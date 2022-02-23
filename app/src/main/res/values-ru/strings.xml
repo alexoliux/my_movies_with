@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Movies</string>
+    <string name="poster_of_movie">Постер к фильму</string>
+    <string name="most_popular">Самые популярные</string>
+    <string name="top_rated">Наиболее рейтиноговые</string>
+    <string name="add_to_favourite">Добавлено в избранное</string>
+    <string name="remove_from_favourite">Удалено из избранного</string>
+    <string name="item_main">Главная</string>
+    <string name="item_favourite">Избранное</string>
+    <string name="launch_trailer">Запустить трейлер</string>
+    <string name="text_view_label_title_name">Название:</string>
+    <string name="text_view_original_title_name">Оригинальное название:</string>
+    <string name="rating">Рейтинг:</string>
+    <string name="release_date">Дата релиза:</string>
+    <string name="description">Описание:</string>
+    <string name="description_poster_for_movie">Постер к фильму</string>
+    <string name="description_add_to_favorite">Добавить или удалить из избранного</string>
+</resources>

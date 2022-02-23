@@ -1,7 +1,9 @@
 package mirea.buryakov.mymovies;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +29,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import mirea.buryakov.mymovies.adapters.MovieAdapter;
 import mirea.buryakov.mymovies.data.MainViewModel;
@@ -38,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private RecyclerView recyclerViewPosters;
     private MovieAdapter movieAdapter;
-    private Switch swithSort;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private Switch switchSort;
     private TextView textViewTopRated;
     private TextView textViewPopularity;
     private ProgressBar progressBarLoading;
@@ -52,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static int methodOfSort;
     private static boolean isLoading = false;
 
+    private static String lang;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -59,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -75,29 +82,37 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
+    private int getColumnCount() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
+        return width / 185 > 2 ? width / 185 : 2;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        lang = Locale.getDefault().getLanguage();
         loaderManager = androidx.loader.app.LoaderManager.getInstance(this);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        swithSort = findViewById(R.id.switchSort);
+        switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewPopularity);
         textViewTopRated = findViewById(R.id.textViewTopRated);
         recyclerViewPosters = findViewById(R.id.recyclerViewPosters);
         progressBarLoading = findViewById(R.id.progressBarLoading);
-        recyclerViewPosters.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerViewPosters.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
         movieAdapter = new MovieAdapter();
         recyclerViewPosters.setAdapter(movieAdapter);
-        swithSort.setChecked(true);
-        swithSort.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchSort.setChecked(true);
+        switchSort.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 page = 1;
                 setMethodOfSort(b);
             }
         });
-        swithSort.setChecked(false);
+        switchSort.setChecked(false);
         movieAdapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
             @Override
             public void onPosterClick(int position) {
@@ -128,12 +143,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public void onClickSetPopularity(View view) {
         setMethodOfSort(false);
-        swithSort.setChecked(false);
+        switchSort.setChecked(false);
     }
 
     public void onClickSetTopRated(View view) {
         setMethodOfSort(true);
-        swithSort.setChecked(true);
+        switchSort.setChecked(true);
     }
 
     private void setMethodOfSort(boolean isTopRated) {
@@ -150,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void downloadData(int methodOfSort, int page) {
-        URL url = NetworkUtils.buildURL(methodOfSort, page);
+        URL url = NetworkUtils.buildURL(methodOfSort, page, lang);
         Bundle bundle = new Bundle();
         bundle.putString("url", url.toString());
         loaderManager.restartLoader(LOADER_ID, bundle, this);
@@ -173,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject data) {
         ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(data);
-        if (movies != null && !movies.isEmpty()) {
+        if (!movies.isEmpty()) {
             if (page == 1) {
                 mainViewModel.deleteAllMovies();
                 movieAdapter.clear();

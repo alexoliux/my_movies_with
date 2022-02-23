@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import mirea.buryakov.mymovies.adapters.ReviewAdapter;
 import mirea.buryakov.mymovies.adapters.TrailerAdapter;
@@ -42,6 +45,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView textViewRating;
     private TextView textViewReleaseDate;
     private TextView textViewOverview;
+    private ScrollView scrollViewInfo;
 
     private RecyclerView recyclerViewTrailers;
     private RecyclerView recyclerViewReviews;
@@ -54,6 +58,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private MainViewModel viewModel;
 
+    private static String lang;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -61,6 +67,7 @@ public class DetailActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -77,10 +84,12 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        lang = Locale.getDefault().getLanguage();
         imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
         imageViewAddToFavourite = findViewById(R.id.imageViewAddToFavourite);
         textViewTitle = findViewById(R.id.textViewTitle);
@@ -88,6 +97,7 @@ public class DetailActivity extends AppCompatActivity {
         textViewRating = findViewById(R.id.textViewRating);
         textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
         textViewOverview = findViewById(R.id.textViewOverview);
+        scrollViewInfo = findViewById(R.id.scrollInfoViewInfo);
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("id")) {
             id = intent.getIntExtra("id", -1 );
@@ -118,12 +128,13 @@ public class DetailActivity extends AppCompatActivity {
         recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewReviews.setAdapter(reviewAdapter);
         recyclerViewTrailers.setAdapter(trailerAdapter);
-        JSONObject jsonObjectTrailers = NetworkUtils.getJSONForVideos(movie.getId());
-        JSONObject jsonObjectReviews = NetworkUtils.getJSONForReviews(movie.getId());
+        JSONObject jsonObjectTrailers = NetworkUtils.getJSONForVideos(movie.getId(), lang);
+        JSONObject jsonObjectReviews = NetworkUtils.getJSONForReviews(movie.getId(), lang);
         ArrayList<Trailer> trailers = JSONUtils.getTrailersFromJSON(jsonObjectTrailers);
         ArrayList<Review> reviews = JSONUtils.getReviewsFromJSON(jsonObjectReviews);
         reviewAdapter.setReviews(reviews);
         trailerAdapter.setTrailers(trailers);
+        scrollViewInfo.smoothScrollTo(0,0);
     }
 
     public void onClickChangeFavourite(View view) {
